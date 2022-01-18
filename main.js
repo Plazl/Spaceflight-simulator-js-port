@@ -17,6 +17,12 @@ Hawk:Hawk,
 Titan:Titan,
 Raptor:Raptor 
 };
+ window.addEventListener('keydown', function (e) {
+      myGameArea.key = e.keyCode;
+    })
+    window.addEventListener('keyup', function (e) {
+      myGameArea.key = false;
+    })
 var totalWeight;
 var fuelTank = {height:10, width:5, weight:10};
 var a;
@@ -25,7 +31,9 @@ var seperator = {power:15, weight:1, atmosDrag:2};
 
 var game = document.getElementById("game");
 var ctx = game.getContext("2d");
-ctx.fillRect(0, 0, 150, 75);
+ctx.fillStyle = "FF0000";
+ctx.fillRect(0, 0, 10, 10);
+document.body.appendChild(game);
 var defaultRocket = {
   stg1engine:Raptor,
   fueltank1:fuelTank,
@@ -83,3 +91,15 @@ if (enginesOn == true && throttle >0) {
 function no() {
  return;
 };
+
+function updateGameArea() {
+  myGameArea.clear();
+  myGamePiece.speedX = 0;
+  myGamePiece.speedY = 0;
+  if (myGameArea.key && myGameArea.key == 37) {myGamePiece.speedX = -1; }
+  if (myGameArea.key && myGameArea.key == 39) {myGamePiece.speedX = 1; }
+  if (myGameArea.key && myGameArea.key == 38) {myGamePiece.speedY = -1; }
+  if (myGameArea.key && myGameArea.key == 40) {myGamePiece.speedY = 1; }
+  myGamePiece.newPos();
+  myGamePiece.update();
+}
