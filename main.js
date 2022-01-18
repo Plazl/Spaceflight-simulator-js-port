@@ -23,8 +23,9 @@ var a;
 var Capsule = {weight:4}; 
 var seperator = {power:15, weight:1, atmosDrag:2};
 
-var game = document.createElement("canvas");
+var game = document.getElementById("game");
 var ctx = game.getContext("2d");
+ctx.fillRect(0, 0, 150, 75);
 var defaultRocket = {
   stg1engine:Raptor,
   fueltank1:fuelTank,
