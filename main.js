@@ -8,6 +8,7 @@ var Frontier = {thrust:150, weight:25, atmosDrag:65};
 var Hawk = {thrust:300, weight:25, atmosDrag:80};
 var Titan = {thrust:450, weight:50, atmosDrag:100};
 var Raptor = {thrust:500, weight:55, atmosDrag:110};
+var Speed;
 var liquidEngines = {
 RCS:RCS,
 Ion:Ion,
@@ -86,6 +87,7 @@ if (enginesOn == true && throttle >0) {
   if (stage1On == true) {
     a = stg1engine.thrust / totalWeight;
   };
+  
 };
 
 function no() {
@@ -98,8 +100,7 @@ function updateGameArea() {
   myGamePiece.speedY = 0;
   if (myGameArea.key && myGameArea.key == 37) {myGamePiece.speedX = -1; }
   if (myGameArea.key && myGameArea.key == 39) {myGamePiece.speedX = 1; }
-  if (myGameArea.key && myGameArea.key == 38) {myGamePiece.speedY = -1; }
-  if (myGameArea.key && myGameArea.key == 40) {myGamePiece.speedY = 1; }
+  if (throttle > 0) {myGamePiece.speedY = ; }
   myGamePiece.newPos();
   myGamePiece.update();
 }
