@@ -8,7 +8,12 @@ var Frontier = {thrust:150, weight:25, atmosDrag:65};
 var Hawk = {thrust:300, weight:25, atmosDrag:80};
 var Titan = {thrust:450, weight:50, atmosDrag:100};
 var Raptor = {thrust:500, weight:55, atmosDrag:110};
-var Speed;
+var initialSpeed;
+var speed;
+var fuelTank = {fuel:1000, weight: 100};
+var seperator = {strength:10, weight:5}
+var Capsule = {weight:10, capacity:2}
+var a;
 var liquidEngines = {
 RCS:RCS,
 Ion:Ion,
@@ -18,23 +23,56 @@ Hawk:Hawk,
 Titan:Titan,
 Raptor:Raptor 
 };
- window.addEventListener('keydown', function (e) {
-      myGameArea.key = e.keyCode;
-    })
-    window.addEventListener('keyup', function (e) {
-      myGameArea.key = false;
-    })
-var totalWeight;
-var fuelTank = {height:10, width:5, weight:10};
-var a;
-var Capsule = {weight:4}; 
-var seperator = {power:15, weight:1, atmosDrag:2};
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 480;
+        this.canvas.height = 270;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
+        this.interval = setInterval(updateGameArea, 20);
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
 
-var game = document.getElementById("game");
-var ctx = game.getContext("2d");
-ctx.fillStyle = "FF0000";
-ctx.fillRect(0, 0, 10, 10);
-document.body.appendChild(game);
+function component(width, height, color, x, y, type) {
+    
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;    
+    this.x = x;
+    this.y = y;
+    this.gravity = 0;
+    this.gravitySpeed = 0;
+    this.update = function() {
+        ctx = myGameArea.context;
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }
+    this.newPos = function() {
+        this.gravitySpeed += this.gravity;
+        this.x += this.speedX;
+        this.y += this.speedY + this.gravitySpeed;
+        this.hitBottom();
+    }
+    this.hitBottom = function() {
+        var rockbottom = myGameArea.canvas.height - this.height;
+        if (this.y > rockbottom) {
+            this.y = rockbottom;
+            this.gravitySpeed = 0;
+        }
+    }
+}
 var defaultRocket = {
   stg1engine:Raptor,
   fueltank1:fuelTank,
@@ -93,14 +131,22 @@ if (enginesOn == true && throttle >0) {
 function no() {
  return;
 };
-
+   setSpeed();
+setInterval(updateSpeed, 1)
+function setSpeed() {
+  initialSpeed = a/1000;
+  speed = initialSpeed
+}
+function updateSpeed() {
+  speed = speed + initialSpeed
+}
 function updateGameArea() {
   myGameArea.clear();
   myGamePiece.speedX = 0;
   myGamePiece.speedY = 0;
   if (myGameArea.key && myGameArea.key == 37) {myGamePiece.speedX = -1; }
   if (myGameArea.key && myGameArea.key == 39) {myGamePiece.speedX = 1; }
-  if (throttle > 0) {myGamePiece.speedY = ; }
+  if (throttle > 0) {myGamePiece.speedY = speed; }
   myGamePiece.newPos();
   myGamePiece.update();
 }
